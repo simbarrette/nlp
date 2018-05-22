@@ -9,7 +9,7 @@ TEMPLATE_CORPUS = 'austencorpus'
 CONTENT_CORPUS = 'lovecraftcorpus'
 
 print('Loading spaCy model... ', end='')
-nlp = spacy.load('en_core_web_lg')
+nlp = spacy.load('en')
 print('Done')
 
 

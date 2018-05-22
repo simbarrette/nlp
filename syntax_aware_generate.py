@@ -33,20 +33,23 @@ def generate(filename, word_limit=None):
     global syntaxes
     parser = Parser()
     if not os.path.exists(SYNTAXES_FILE):
-        #  sents = nltk.corpus.gutenberg.sents('results.txt')
+        sents = nltk.corpus.gutenberg.sents('austen-persuasion.txt')
         # NOTE: results.txt is a big file of raw text not included in source control, provide your own corpus.
-        with codecs.open(filename, encoding='utf-8') as corpus:
-            sents = nltk.sent_tokenize(corpus.read())
-            if word_limit:
-                sents = [sent for sent in sents if len(sent) < word_limit]
-            sent_limit = min(1500, len(sents))
-            sents[0:sent_limit]
-            for sent in tqdm(sents):
-                try:
-                    parsed = parser.parse(sent)
-                except TypeError:
-                    pass
-                syntax_signature(parsed, save=True)
+        #with codecs.open(filename, encoding='utf-8') as corpus:
+            #sents = nltk.sent_tokenize(corpus.read())
+        print("Testint printing austen")
+        print(sents)
+        if word_limit:
+            sents = [sent for sent in sents if len(sent) < word_limit]
+        sent_limit = min(1500, len(sents))
+        sents[0:sent_limit]
+        for sent in tqdm(sents):
+            try:
+                #parsed = parser.parse(sent)
+                parsed = parser.parse(' '.join(sent))
+            except TypeError:
+                pass
+            syntax_signature(parsed, save=True)
         with open(SYNTAXES_FILE, 'wb+') as pickle_file:
             pickle.dump(syntaxes, pickle_file)
     else:
@@ -62,17 +65,22 @@ def generate(filename, word_limit=None):
         with open(CFDS_FILE, 'rb+') as pickle_file:
             cfds = pickle.load(pickle_file)
 
-    sents = nltk.corpus.gutenberg.sents('austen-emma.txt')
-    if word_limit:
-        sents = [sent for sent in sents if len(sent) < word_limit]
-    sent = random.choice(sents)
-    parsed = parser.parse(' '.join(sent))
-    print(parsed)
-    print(' '.join(parsed.leaves()))
-    replaced_tree = tree_replace(parsed, cfds, [])
-    print('=' * 30)
-    print(' '.join(replaced_tree.leaves()))
-    print(replaced_tree)
+    #sents = nltk.corpus.gutenberg.sents('austen-emma.txt')
+    with codecs.open(filename, encoding='utf-8') as corpus:
+        sents = nltk.sent_tokenize(corpus.read())
+        print("Testint printing my own corpus")
+        print(sents)
+        #if word_limit:
+            #sents = [sent for sent in sents if len(sent) < word_limit]
+        sent = random.choice(sents)
+        parsed = parser.parse(sent)
+        #parsed = parser.parse(' '.join(sent))
+        print(parsed)
+        print(' '.join(parsed.leaves()))
+        replaced_tree = tree_replace(parsed, cfds, [])
+        print('=' * 30)
+        print(' '.join(replaced_tree.leaves()))
+        print(replaced_tree)
 
 
 def list_to_string(l):
